@@ -3,10 +3,10 @@ import App from '../App';
 import store from '../store';
 import {Provider} from 'react-redux';
 
-const Root = (props) => {
+const Root = () => {
     return (
         <Provider store={store}>
-            <App {...props}/>
+            <App/>
         </Provider>
     );
 };

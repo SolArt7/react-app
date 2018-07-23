@@ -1,9 +1,10 @@
 import React, {Component} from "react";
 import PropTypes from 'prop-types';
 import CommentList from '../CommentList';
+import {connect} from "react-redux";
+import {deleteArticle} from "../../AC";
 
 class Article extends Component {
-	
 	static propTypes = {
 		article: PropTypes.shape({
 			id: PropTypes.string.isRequired,
@@ -11,6 +12,12 @@ class Article extends Component {
 			body: PropTypes.string,
 			comment: PropTypes.array
 		}).isRequired
+	};
+	
+	handleDelete = () => {
+		console.log('Delele article');
+		const {deleteArticle, article} = this.props;
+		deleteArticle(article.id);
 	};
 	
 	getBody() {
@@ -31,10 +38,11 @@ class Article extends Component {
 				<button onClick={() => toggleOpen()} style={{marginTop: '10px'}}>
 					{isOpen ? 'Close body' : 'Show body'}
 				</button>
+				<button onClick={this.handleDelete}>Delete</button>
 				{this.getBody()}
 			</div>
 		)
 	}
 }
 
-export default Article;
+export default connect(null, {deleteArticle})(Article);

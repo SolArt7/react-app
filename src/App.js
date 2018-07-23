@@ -20,7 +20,7 @@ class App extends Component {
                 <Counter />
                 <UserForm articles={articles} />
                 <h1>Articles</h1>
-                <ArticleList articles={articles} />
+                <ArticleList />
             </div>
         )
     }
