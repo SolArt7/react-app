@@ -9,6 +9,9 @@ class ArticleList extends Component {
 	static propTypes = {
 		// from connect
 		articles: PropTypes.array.isRequired,
+		selectedArticles: PropTypes.array,
+		from: PropTypes.instanceOf(Date),
+		to: PropTypes.instanceOf(Date),
 		// from accordion
 		openId: PropTypes.string,
 		toggleOpen: PropTypes.func
@@ -18,9 +21,26 @@ class ArticleList extends Component {
 		articles: []
 	};
 	
+	
+	dateFilter(articles) {
+		const {from, to} = this.props;
+		if (!from || !to)
+			return articles;
+		return articles.filter(article => (
+			new Date(article.date).getTime() >= new Date(from).getTime() &&
+			new Date(article.date).getTime() <= new Date(to).getTime()
+		))
+	}
+	
+	articlesFilter() {
+		let {articles, selectedArticles} = this.props;
+		if (!selectedArticles.length) return this.dateFilter(articles);
+		return this.dateFilter(selectedArticles);
+	}
+	
 	render() {
-		const { articles, openId, toggleOpen } = this.props;
-		return articles.map(article => {
+		const {openId, toggleOpen } = this.props;
+		return this.articlesFilter().map(article => {
 			return <Article 
 				key={article.id}
 				article={article}
@@ -33,5 +53,8 @@ class ArticleList extends Component {
 
 
 export default connect((state) => ({
-	articles: state.articles
-}), {})(accordion(ArticleList));
+	articles: state.articles,
+	selectedArticles: state.selectedArticles,
+	from: state.dates.from,
+	to: state.dates.to
+}))(accordion(ArticleList));

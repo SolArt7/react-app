@@ -2,25 +2,22 @@ import React, {Component} from 'react';
 import DayPicker, {DateUtils} from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import './day-picker.css';
+import {connect} from "react-redux";
+import {addStartDate, addEndDate, clearDate} from "../../AC";
 
 class DayPickerComponent extends Component {
-	state = {
-		from: '',
-		to: ''
-	};
-	numberOfMonths = 2;
+	
 	handleDayClick = (day) => {
-		const range = DateUtils.addDayToRange(day, this.state);
-		this.setState(range);
+		const {from, to, addStartDate, addEndDate} = this.props;
+		const range = DateUtils.addDayToRange(day, {from, to});
+		addStartDate(range.from);
+		addEndDate(range.to);
 	};
 	resetClick = () => {
-		this.setState({
-			from: undefined,
-			to: undefined
-		})
+		this.props.clearDate();
 	};
 	render() {
-		const {from, to} = this.state;
+		const {from, to} = this.props;
 		const modifiers = { start: from, end: to };
 		return (
 			<div>
@@ -33,7 +30,7 @@ class DayPickerComponent extends Component {
 					selectedDays={[from, { from, to }]}
 					onDayClick={this.handleDayClick}
 					modifiers={modifiers}
-					numberOfMonth={this.numberOfMonths}
+					numberOfMonth={2}
 				/>
 				<br/>
 				Dates: {from && to ? `${from.toLocaleDateString()} - ${to.toLocaleDateString()}` : 'Select dates'}
@@ -42,4 +39,7 @@ class DayPickerComponent extends Component {
 	}
 }
 
-export default DayPickerComponent;
+export default connect((state) => ({
+	from: state.dates.from,
+	to: state.dates.to
+}), { addStartDate, addEndDate, clearDate })(DayPickerComponent);

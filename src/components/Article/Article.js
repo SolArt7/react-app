@@ -27,6 +27,7 @@ class Article extends Component {
 			<section>
 				{article.text}
 				<CommentList comments={article.comments} articleId={article.id}/>
+				<h4>Date: {new Date(article.date).toLocaleString()}</h4>
 			</section>)
 	}
 	
